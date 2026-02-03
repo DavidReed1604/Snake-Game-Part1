@@ -12,16 +12,6 @@ export default function App() {
     // Include your display statements to test below
     let text = "OUTPUT:\n";
     display("hey");
-    const snake1 = new Snake();
-    snake1.move(5);
-    snake1.turn();
-    snake1.move(2);
-    display("Snake 1 position: " + snake1.position);
-    const snake2 = new Snake();
-    snake2.turn();
-    snake2.move(10);
-    display("Snake 2 position: " + snake2.position);
-
     setOutput(text);
   }, []);
   return (
