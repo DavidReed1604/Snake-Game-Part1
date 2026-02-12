@@ -1,12 +1,9 @@
 import display from './display';
-import Quacker from './Quacker'
+import IQuacker from './IQuacker'
 
-class superQuacker extends Quacker {
-    constructor() {
-        super();
-    }
-    public makeNoise(): void {
-        display("The quacker goes COOOL SOUUUNDS");
+class superQuacker implements IQuacker {
+    makeNoise():void {
+        display("The engine goes QUUUAACCKKK");
     }
 }
 export default superQuacker
