@@ -48,8 +48,11 @@ class Snake {
     else if (this.currentDirection === "down") this.currentDirection = "left";
     else this.currentDirection = "up";
   }
-  getPosition(): Point {
+  get Position(): Point {
     return this.currentPosition;
+  }
+  public get direction(): Direction {
+    return this.direction;
   }
 }
 
