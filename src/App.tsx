@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import Display from "./ConsoleDisplay";
 import display from "./display";
 // import Car from "./Car";
-// import Duck from "./Duck";
+import Duck from "./Duck";
+import Quacker from './Quacker';
 
 export default function App() {
   const [output, setOutput] = useState("");
@@ -11,6 +12,18 @@ export default function App() {
     // Include your display statements to test below
     let text = "OUTPUT:\n";
     display("hey");
+    let redDuckQuacker = new Quacker();
+    let blueDuckQuacker = new Quacker();
+    let coolDuck = new Quacker();
+    let redDuck = new Duck("red", redDuckQuacker);
+    let blueDuck = new Duck("blue", blueDuckQuacker);
+    redDuck.Quack(4);
+    blueDuck.Quack(10);
+    display("Changing Quackers.. ");
+    redDuck.Quacker = coolDuck;
+    blueDuck.Quacker = redDuckQuacker;
+    redDuck.Quack(4);
+    blueDuck.Quack(10);
     setOutput(text);
   }, []);
   return (
