@@ -19,7 +19,7 @@ class SnakeController {
         this.slitherer.turnRight();
     }
     public get snakePosition(): Point {
-        return this.slitherer.Position;
+        return this.slitherer.p;
     }
     public get snakeDirection(): string {
         return this.slitherer.direction;

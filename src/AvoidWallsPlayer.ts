@@ -19,7 +19,7 @@ class AvoidWallsPlayer extends Player {
                 this.sc.turnSnakeRight();
             }
         }
-        else if (dir === "right" && pos.x === -1) {
+        else if (dir === "right" && pos.x === width -1) {
             if (pos.y <= halfHeight) {
                 this.sc.turnSnakeRight();
             } else {

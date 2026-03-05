@@ -1,34 +1,39 @@
-import WorldModel from "./WorldModel";
+import SnakeController from "./SnakeController";
 import Snake from "./Snake";
+import WorldModel from "./WorldModel";
 
-describe("WorldModel", () => {
+describe("SnakeController tests", () => {
 
-  let mockSnake: jest.Mocked<Snake>;
-
+  let snake: Snake;
+  let world: WorldModel;
+  let controller: SnakeController;
+ 
   beforeEach(() => {
-    mockSnake = {
-      move: jest.fn()
-    } as unknown as jest.Mocked<Snake>;
+    snake = new Snake();
+    world = new WorldModel(snake, 20, 20);
+    controller = new SnakeController(world, snake);
   });
 
-  it("initializes width and height correctly", () => {
-    const world = new WorldModel(mockSnake, 20, 30);
-
-    expect(world.width).toBe(20);
-    expect(world.height).toBe(30);
+  it("returns world width", () => {
+    expect(controller.worldWidth).toBe(20);
   });
 
-  it("stores the snake instance", () => {
-    const world = new WorldModel(mockSnake, 10, 15);
-
-    expect(world.Snake).toBe(mockSnake);
+  it("returns world height", () => {
+    expect(controller.worldHeight).toBe(20);
   });
 
-  it("calls snake.move when update is called", () => {
-    const world = new WorldModel(mockSnake, 10, 15);
-
-    world.update(5);
-
-    expect(mockSnake.move).toHaveBeenCalledWith(5);
+  it("returns snake position", () => {
+    expect(controller.snakePosition).toBeDefined();
   });
+
+  it("turns snake left", () => {
+    controller.turnSnakeLeft();
+    expect(controller.snakeDirection).toBe("up");
+  });
+
+  it("turns snake right", () => {
+    controller.turnSnakeRight();
+    expect(controller.snakeDirection).toBe("down");
+  });
+
 });

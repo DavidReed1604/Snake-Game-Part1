@@ -20,7 +20,7 @@ class CanvasWorldView implements IWorldView {
             this.worldCanvas.width,
             this.worldCanvas.clientHeight
         );
-        const snakePos = world.Snake.Position;
+        const snakePos = world.snake.p;
         this.context.fillStyle = "green";
         this.context.fillRect(
             snakePos.x * this.scalingFactor,
