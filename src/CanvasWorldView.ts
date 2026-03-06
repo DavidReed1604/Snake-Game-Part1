@@ -8,9 +8,9 @@ class CanvasWorldView implements IWorldView {
     constructor(scalingFactor: number) {
         this.scalingFactor = scalingFactor;
         this.worldCanvas = document.createElement("canvas");
-        this.context = this.worldCanvas.getContext("2d")!;
+        this.context = this.worldCanvas.getContext("2d") as CanvasRenderingContext2D;
         document.body.appendChild(this.worldCanvas);
-    }
+        }
     public display(world: WorldModel): void {
         this.worldCanvas.width = world.width * this.scalingFactor;
         this.worldCanvas.height = world.height * this.scalingFactor;
@@ -18,7 +18,7 @@ class CanvasWorldView implements IWorldView {
             0,
             0,
             this.worldCanvas.width,
-            this.worldCanvas.clientHeight
+            this.worldCanvas.height
         );
         const snakePos = world.snake.p;
         this.context.fillStyle = "green";
