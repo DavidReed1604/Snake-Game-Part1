@@ -1,6 +1,7 @@
 import SnakeController from "./SnakeController";
 import Snake from "./Snake";
 import WorldModel from "./WorldModel";
+import Point from './Point';
 
 describe("SnakeController tests", () => {
 
@@ -9,17 +10,16 @@ describe("SnakeController tests", () => {
   let controller: SnakeController;
  
   beforeEach(() => {
-    snake = new Snake();
-    world = new WorldModel(snake, 20, 20);
+    // Create snake with required constructor params
+    snake = new Snake(new Point(0, 0), 3, "RIGHT");
+
+    // World now has no constructor parameters
+    world = new WorldModel();
+
+    // Add snake to world
+    world.addSnake(snake);
+
     controller = new SnakeController(world, snake);
-  });
-
-  it("returns world width", () => {
-    expect(controller.worldWidth).toBe(20);
-  });
-
-  it("returns world height", () => {
-    expect(controller.worldHeight).toBe(20);
   });
 
   it("returns snake position", () => {
@@ -28,12 +28,15 @@ describe("SnakeController tests", () => {
 
   it("turns snake left", () => {
     controller.turnSnakeLeft();
-    expect(controller.snakeDirection).toBe("up");
+
+    // Expect updated direction via getter
+    expect(controller.snakeDirection).toBe("UP");
   });
 
   it("turns snake right", () => {
     controller.turnSnakeRight();
-    expect(controller.snakeDirection).toBe("down");
+
+    expect(controller.snakeDirection).toBe("DOWN");
   });
 
 });

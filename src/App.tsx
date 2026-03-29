@@ -8,18 +8,30 @@ import Duck from "./Duck";
 import Quacker from './Quacker';
 import CanvasWorldView from './CanvasWorldView';
 import WorldModel from "./WorldModel";
-
+import Point from "./Point";
 
 export default function App() {
   const [output, setOutput] = useState("");
   useEffect(() => {
     // Include your display statements to test below
     let text = "OUTPUT:\n";
-    const snake = new Snake();
-    const world = new WorldModel(snake,20,20);
-    const canvasView = new CanvasWorldView(20);
-    world.view = canvasView;
-    world.update(0);
+    // Create a snake (head at 0,0, length 5, moving RIGHT)
+    const snake = new Snake(new Point(0, 0), 5, "RIGHT");
+
+    // Create world and add the snake
+    const world = new WorldModel();
+    world.addSnake(snake);
+
+    // Create a canvas + context for CanvasWorldView
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    const canvasView = new CanvasWorldView(context);
+
+    // Add view to world
+    world.addView(canvasView);
+
+    // Update world (1 tick)
+    world.update();
     display("hey");
     let redDuckQuacker = new Quacker();
     let blueDuckQuacker = new Quacker();

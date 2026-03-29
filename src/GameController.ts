@@ -30,7 +30,7 @@ class GameController {
             }
             const elapsed = time - lastTime;
             if(elapsed > 250) {
-                this.world.update(1);
+                this.world.update();
                 lastTime += 250;
             }
             requestAnimationFrame(updateFrame);

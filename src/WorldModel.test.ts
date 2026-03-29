@@ -1,29 +1,42 @@
 import Snake from "./Snake";
 import WorldModel from "./WorldModel";
+import Point from './Point';
 
 describe("WorldModel tests", () => {
 
-  it("stores the snake provided to constructor", () => {
-    const snake = new Snake();
-    const world = new WorldModel(snake, 20, 20);
+  it("stores snakes added to the world", () => {
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
+    const world = new WorldModel();
 
-    expect(world.snake).toBe(snake);
+    world.addSnake(snake);
+
+    expect(world.getAllSnakes()).toContain(snake);
   });
 
   it("updates snake position correctly", () => {
-    const snake = new Snake();
-    const world = new WorldModel(snake, 20, 20);
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
+    const world = new WorldModel();
 
-    world.update(5);
+    world.addSnake(snake);
 
-    let pos = world.snake.p;
+    // Move 5 steps
+    for (let i = 0; i < 5; i++) {
+      world.update();
+    }
+
+    let pos = snake.getPosition();
     expect(pos.x).toBe(5);
     expect(pos.y).toBe(0);
 
-    snake.turnRight(); 
-    world.update(3);
+    // Change direction
+    snake.turnRight();
 
-    pos = world.snake.p;
+    // Move 3 steps
+    for (let i = 0; i < 3; i++) {
+      world.update();
+    }
+
+    pos = snake.getPosition();
     expect(pos.x).toBe(5);
     expect(pos.y).toBe(3);
   });

@@ -1,61 +1,76 @@
-import Snake from "./Snake";
+import Snake from './Snake';
+import Point from './Point';
 
 describe("Snake movement tests", () => {
 
   it("starts at (0,0)", () => {
-    const snake = new Snake();
-    const pos = snake.p;
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
+    const pos = snake.getPosition();
 
     expect(pos.x).toBe(0);
     expect(pos.y).toBe(0);
   });
 
   it("moves right by default", () => {
-    const snake = new Snake();
-    snake.move(3);
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
 
-    const pos = snake.p;
+    // move 3 steps
+    for (let i = 0; i < 3; i++) {
+      snake.move();
+    }
+
+    const pos = snake.getPosition();
 
     expect(pos.x).toBe(3);
     expect(pos.y).toBe(0);
   });
 
   it("turns left from right and moves up", () => {
-    const snake = new Snake();
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
 
     snake.turnLeft();
-    snake.move(2);
 
-    const pos = snake.p;
+    for (let i = 0; i < 2; i++) {
+      snake.move();
+    }
+
+    const pos = snake.getPosition();
 
     expect(pos.x).toBe(0);
     expect(pos.y).toBe(-2);
   });
 
   it("turns right from right and moves down", () => {
-    const snake = new Snake();
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
 
     snake.turnRight();
-    snake.move(2);
 
-    const pos = snake.p;
+    for (let i = 0; i < 2; i++) {
+      snake.move();
+    }
+
+    const pos = snake.getPosition();
 
     expect(pos.x).toBe(0);
     expect(pos.y).toBe(2);
   });
 
   it("turns multiple times", () => {
-    const snake = new Snake();
+    const snake = new Snake(new Point(0, 0), 3, "RIGHT");
 
-    snake.turnRight(); // down
-    snake.turnRight(); // left
-    snake.move(4);
+    snake.turnRight(); // DOWN
+    snake.turnRight(); // LEFT
 
-    const pos = snake.p;
+    for (let i = 0; i < 4; i++) {
+      snake.move();
+    }
+
+    const pos = snake.getPosition();
 
     expect(pos.x).toBe(-4);
     expect(pos.y).toBe(0);
   });
 
 });
+
 export {};

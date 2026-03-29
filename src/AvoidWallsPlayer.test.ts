@@ -7,14 +7,13 @@ describe("AvoidWallsPlayer", () => {
   beforeEach(() => {
     mockSC = {
       snakePosition: { x: 0, y: 2 },
-      snakeDirection: "left",
-      worldWidth: 10,
-      worldHeight: 10,
+      snakeDirection: "LEFT",
       turnSnakeLeft: jest.fn(),
       turnSnakeRight: jest.fn()
     };
 
-    player = new AvoidWallsPlayer(mockSC);
+    // Pass width and height into constructor
+    player = new AvoidWallsPlayer(mockSC, 10, 10);
   });
 
   it("turns left when hitting left wall in upper half", () => {
@@ -30,8 +29,10 @@ describe("AvoidWallsPlayer", () => {
 
   it("does nothing when not hitting wall", () => {
     mockSC.snakePosition = { x: 5, y: 5 };
-    mockSC.snakeDirection = "right";
+    mockSC.snakeDirection = "RIGHT";
+
     player.makeTurn();
+
     expect(mockSC.turnSnakeLeft).not.toHaveBeenCalled();
     expect(mockSC.turnSnakeRight).not.toHaveBeenCalled();
   });

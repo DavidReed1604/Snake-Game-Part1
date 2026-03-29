@@ -12,23 +12,22 @@ class SnakeController {
         this.snakeWorld = snakeWorld;
         this.slitherer = slitherer;
     }
+
     public turnSnakeLeft(): void {
         this.slitherer.turnLeft();
     }
+
     public turnSnakeRight(): void {
         this.slitherer.turnRight();
     }
+
+    // Updated: use getter method instead of .p
     public get snakePosition(): Point {
-        return this.slitherer.p;
+        return this.slitherer.getPosition();
     }
+
     public get snakeDirection(): string {
-        return this.slitherer.direction;
-    }
-    public get worldWidth(): number {
-        return this.snakeWorld.width;
-    }
-    public get worldHeight(): number {
-        return this.snakeWorld.height;
+        return this.slitherer.getDirection();
     }
 }
 

@@ -7,58 +7,59 @@ import IWorldView from "./IWorldView";
  */
 
 class WorldModel {
-  private worldView: IWorldView | null = null;
-  private _snake: Snake;
-  private _width: number;
-  private _height: number;
+  private allSnakes: Snake[];
+  private allViews: IWorldView[];
 
-/**
- * Creates a new WorldModel.
- * @param snake the snake used in the world
- * @param width width of the world
- * @param height height of the world
- */
-
-  constructor(snake: Snake, width:number, height:number) {
-    this._width = width;
-    this._height = height;
-    this._snake = snake;
+  constructor() {
+    // Initialize empty arrays (no snakes or views at start)
+    this.allSnakes = [];
+    this.allViews = [];
   }
-/**
- * Updates the world by moving the snake.
- * @param squares number of squares the snake moves
- */
-
-  update(squares: number): void {
-    this._snake.move(squares);
-    if (this.worldView !== null) {
-      this.worldView.display(this);
+  // Add a snake to the world
+  public addSnake(s: Snake): void {
+    this.allSnakes.push(s);
+  }
+  // Add a view to the world
+  public addView(v: IWorldView): void {
+    this.allViews.push(v);
+  }
+  // Getter for all snakes
+  public getAllSnakes(): Snake[] {
+    return this.allSnakes;
+  }
+  public update(): void {
+    //Step 1: move every snake forward
+    // Each snake updates its own position
+    this.allSnakes.forEach(s => s.move());
+    //Step 2: Detect collisions
+    //We do not remove snakes immediately
+    //Instead, we collect them first
+    const collided: Snake[] = [];
+    //Compare every pair of snakes
+    for (let i = 0; i < this.allSnakes.length; i++) {
+      for (let j = 0; j < this.allSnakes.length; j++) {
+        // Skip comparing a snake with itself here
+        if (i !== j) {
+          const a = this.allSnakes[i];
+          const b = this.allSnakes[j];
+          //If snake A's head hits any part of snake B
+          if (a.didCollide(b)) {
+            //Only add once (avoid duplicates)
+            if (!collided.includes(a)) {
+              collided.push(a);
+            }
+          }
+        }
+      }
     }
-  }
-  /**
-   * Gets the snake in the world
-   */
-  public get snake(): Snake {
-    return this._snake;
-  }
-  /**
-   * Gets the width of the world
-   */
-  public get width():number {
-    return this._width;
-  }
-  /**
-   * Gets the height of the world
-   */
-  public get height():number {
-    return this._height;
-  }
-  /**
-   * Sets the view used to display the world
-   */
-  public set view(view: IWorldView) {
-    this.worldView = view;
+    //Step 3: Remove collided snakes
+    //We filter out any snake that appears in collided[]
+    this.allSnakes = this.allSnakes.filter(
+      s => !collided.includes(s)
+    );
+    //Step 4: Update all views
+    //Each view redraws the world
+    this.allViews.forEach(v => v.display(this));
   }
 }
-
 export default WorldModel;

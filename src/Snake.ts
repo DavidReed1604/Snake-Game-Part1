@@ -1,100 +1,87 @@
 import Point from "./Point";
 
-type Direction = "up" | "down" | "left" | "right";
 
-/**
- * Represents snake in the world
- * Tracks its position and direction and allows movement and turning.
- */
 class Snake {
-  private currentPosition: Point;
-  private currentDirection: Direction;
+  private currentParts: Point[];
+  private direction: string;
 
-/**
- * Creates a new snake starting at (0,0) facing right.
- */
-
-  constructor() {
-    this.currentPosition = new Point(0, 0);
-    this.currentDirection = "right";
-  }
-
-/**
- * Moves the snake forward a numbers of spaces.
- * @param squares number of squares to move
- */
-
-  move(squares: number): void {
-      if (this.currentDirection === "up") {
-        this.currentPosition = new Point(
-          this.currentPosition.x,
-          this.currentPosition.y - squares,
-        );
-      } else if (this.currentDirection === "down") {
-        this.currentPosition = new Point(
-          this.currentPosition.x,
-          this.currentPosition.y + squares,
-        );
-      } else if (this.currentDirection === "left") {
-        this.currentPosition = new Point(
-          this.currentPosition.x - squares,
-          this.currentPosition.y,
-        );
-      } else {
-        this.currentPosition = new Point(
-          this.currentPosition.x + squares,
-          this.currentPosition.y,
-        );
-      }
-    }
+  constructor(startPosition: Point, size: number, direction: string) {
+    this.direction = direction;
+    //Step 1: Initialize snake with head
+    this.currentParts = [startPosition];
     /**
-     * Turns the snake left.
+     * Step 2: Build the tail
+     * We add (size - 1) more points behind the head
+     * This example builds horizontally to the left
      */
-
-  turnLeft(): void {
-    if (this.currentDirection === "up") this.currentDirection = "left";
-    else if (this.currentDirection === "left") this.currentDirection = "down";
-    else if (this.currentDirection === "down") this.currentDirection = "right";
-    else this.currentDirection = "up";
+    for (let i = 1; i < size; i++) {
+      this.currentParts.push(
+        new Point(startPosition.x - i, startPosition.y)
+      );
+    }
   }
-
-  /**
-   * Turns the snake right.
-   */
+  //Return the direction of the snake
+  public getDirection(): string {
+    return this.direction;
+  }
+  //Returns the head of the snake
+  public getPosition(): Point {
+    return this.currentParts[0];
+  }
+  //Returns all parts
+  public getParts(): Point[] {
+    return this.currentParts;
+  }
+  public move(): void {
+    /** 
+     * Step 1: move tail forward
+     * We go backwards so we do not overwrite values
+     */
+    for (let i = this.currentParts.length - 1; i > 0; i--) {
+      this.currentParts[i] = this.currentParts[i - 1];
+    }
+    //Step 2: compute new head position
+    const head = this.currentParts[0];
+    let newHead: Point;
+    switch (this.direction) {
+      case "UP":
+        newHead = new Point(head.x, head.y - 1);
+        break;
+      case "DOWN":
+        newHead = new Point(head.x, head.y + 1);
+        break;
+      case "LEFT":
+        newHead = new Point(head.x - 1, head.y);
+        break;
+      case "RIGHT":
+        newHead = new Point(head.x + 1, head.y);
+        break;
+      default:
+        newHead = head; //no movement
+    }
+    // Step 3: Place new head at index 0
+    this.currentParts[0] = newHead;
+  }
+  public didCollide(s: Snake): boolean {
+    const head = this.getPosition();
+    // If checking against itself ignore the head (index 0), only check tail
+    const partsToCheck = this === s ? s.getParts().slice(1) : s.getParts();
+    // Check if head matches any part
+    return partsToCheck.some(p => head.equals(p));
+  }
+  //Turn the snake left
+   turnLeft(): void {
+    if (this.direction === "up") this.direction = "left";
+    else if (this.direction === "left") this.direction = "down";
+    else if (this.direction === "down") this.direction = "right";
+    else this.direction = "up";
+  }
+  //Turns the snake right.
   turnRight(): void {
-    if (this.currentDirection === "up") this.currentDirection = "right";
-    else if (this.currentDirection === "right") this.currentDirection = "down";
-    else if (this.currentDirection === "down") this.currentDirection = "left";
-    else this.currentDirection = "up";
-  }
-
-  /**
-   * Gets the snakes current position
-   */
-  get p(): Point {
-    return this.currentPosition;
-  }
-
-  /**
-   * Gets the snakes current direction
-   */
-  get direction(): Direction {
-    return this.currentDirection;
+    if (this.direction === "up") this.direction = "right";
+    else if (this.direction === "right") this.direction = "down";
+    else if (this.direction === "down") this.direction = "left";
+    else this.direction = "up";
   }
 }
-
-/*
-  turn() {
-    if (this.currentDirection === 1) {
-      this.currentDirection = -1;
-    } else {
-      this.currentDirection = 1;
-    }
-  }
-  get position(): number {
-    return this.currentPosition;
-  }
-
-*/
-
 export default Snake;
