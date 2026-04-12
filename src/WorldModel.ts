@@ -1,5 +1,8 @@
 import Snake from "./Snake";
 import IWorldView from "./IWorldView";
+import IActor from "./IActor";
+import ActorCollisionHandlers from "./ActorCollisionHandlers";
+import ArrayIterator from "./ArrayIterator";
 
 /**
  * Represents the game world that contains the snake
@@ -7,46 +10,44 @@ import IWorldView from "./IWorldView";
  */
 
 class WorldModel {
-  private allSnakes: Snake[];
+  private actors: IActor[];
   private allViews: IWorldView[];
+  private aca: ActorCollisionHandlers; 
 
-  constructor() {
+  constructor(aca: ActorCollisionHandlers) {
     // Initialize empty arrays (no snakes or views at start)
-    this.allSnakes = [];
+    this.actors = [];
     this.allViews = [];
+    this.aca = aca;
   }
   // Add a snake to the world
-  public addSnake(s: Snake): void {
-    this.allSnakes.push(s);
+  public addActor(a: IActor): void {
+    this.actors.push();
   }
+  
   // Add a view to the world
   public addView(v: IWorldView): void {
     this.allViews.push(v);
   }
   // Getter for all snakes
-  public getAllSnakes(): Snake[] {
-    return this.allSnakes;
+  public getActors(): ArrayIterator<IActor> {
+    return new ArrayIterator(this.actors);
   }
   public update(): void {
-    //Step 1: move every snake forward
-    // Each snake updates its own position
-    this.allSnakes.forEach(s => s.move());
-    //Step 2: Detect collisions
-    //We do not remove snakes immediately
-    //Instead, we collect them first
-    const collided: Snake[] = [];
-    //Compare every pair of snakes
-    for (let i = 0; i < this.allSnakes.length; i++) {
-      for (let j = 0; j < this.allSnakes.length; j++) {
+    //update actors
+    this.actors.forEach(a => a.update());
+    //collisions
+    for (let i = 0; i < this.actors.length; i++) {
+      for (let j = 0; j < this.actors.length; j++) {
         // Skip comparing a snake with itself here
         if (i !== j) {
-          const a = this.allSnakes[i];
-          const b = this.allSnakes[j];
+          const a = this.actors[i];
+          const b = this.actors[j];
           //If snake A's head hits any part of snake B
-          if (a.didCollide(b)) {
+          if ("didCollide" in a && (a as any).didCollide(b)) {
             //Only add once (avoid duplicates)
-            if (!collided.includes(a)) {
-              collided.push(a);
+            if (this.aca.hasCollisionAction(a.type, b.type)) {
+              this.aca.applyCollisionAction;
             }
           }
         }
@@ -54,9 +55,7 @@ class WorldModel {
     }
     //Step 3: Remove collided snakes
     //We filter out any snake that appears in collided[]
-    this.allSnakes = this.allSnakes.filter(
-      s => !collided.includes(s)
-    );
+    this.actors = this.actors.filter(a => a.isActive);
     //Step 4: Update all views
     //Each view redraws the world
     this.allViews.forEach(v => v.display(this));

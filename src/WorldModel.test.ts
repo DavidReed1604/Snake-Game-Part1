@@ -1,23 +1,30 @@
 import Snake from "./Snake";
 import WorldModel from "./WorldModel";
 import Point from './Point';
+import ActorCollisionHandlers from "./ActorCollisionHandlers";
+import { resourceLimits } from "worker_threads";
 
 describe("WorldModel tests", () => {
 
   it("stores snakes added to the world", () => {
     const snake = new Snake(new Point(0, 0), 3, "RIGHT");
-    const world = new WorldModel();
+    const aca = new ActorCollisionHandlers();
+    const world = new WorldModel(aca);
 
-    world.addSnake(snake);
+    world.addActor(snake);
 
-    expect(world.getAllSnakes()).toContain(snake);
+    const iterator = world.getActors();
+    const result = iterator.next();
+
+    expect(result.value).toBe(snake);
   });
 
   it("updates snake position correctly", () => {
     const snake = new Snake(new Point(0, 0), 3, "RIGHT");
-    const world = new WorldModel();
+    const aca = new ActorCollisionHandlers();
+    const world = new WorldModel(aca);
 
-    world.addSnake(snake);
+    world.addActor(snake);
 
     // Move 5 steps
     for (let i = 0; i < 5; i++) {

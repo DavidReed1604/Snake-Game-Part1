@@ -6,15 +6,21 @@ import HumanPlayer from "./HumanPlayer";
 import AvoidWallsPlayer from "./AvoidWallsPlayer";
 import LRKeyInputHandler from "./LRKeyInputHandler";
 import Point from "./Point";
+import CanvasWorldView from "./CanvasWorldView";
+import ActorCollisionHandlers from "./ActorCollisionHandlers";
+import { arch } from "os";
 
 // Create snake with new constructor
 const snake = new Snake(new Point(0, 0), 5, "RIGHT");
 
+// collision system
+const aca = new ActorCollisionHandlers();
+
 // World no longer takes parameters
-const world = new WorldModel();
+const world = new WorldModel(aca);
 
 // Add snake to world
-world.addSnake(snake);
+world.addActor(snake);
 
 // Controller still connects snake + world
 const snakeController = new SnakeController(world, snake);

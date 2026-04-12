@@ -1,12 +1,15 @@
 import Point from "./Point";
+import ICollidable from "./ICollidable";
+import IActor from "./IActor";
 
-
-class Snake {
+class Snake implements ICollidable {
   private currentParts: Point[];
   private direction: string;
+  private isCurrentlyActive: boolean;
 
   constructor(startPosition: Point, size: number, direction: string) {
     this.direction = direction;
+    this.isCurrentlyActive = true;
     //Step 1: Initialize snake with head
     this.currentParts = [startPosition];
     /**
@@ -20,6 +23,10 @@ class Snake {
       );
     }
   }
+  //Update method
+  public update(): void {
+    this.move();
+  }
   //Return the direction of the snake
   public getDirection(): string {
     return this.direction;
@@ -31,6 +38,15 @@ class Snake {
   //Returns all parts
   public getParts(): Point[] {
     return this.currentParts;
+  }
+  get position(): Point {
+    return this.getPosition();
+  }
+  get isActive(): boolean {
+    return this.isCurrentlyActive;
+  }
+  get type(): string {
+    return "snake";
   }
   public move(): void {
     /** 
@@ -62,12 +78,42 @@ class Snake {
     // Step 3: Place new head at index 0
     this.currentParts[0] = newHead;
   }
-  public didCollide(s: Snake): boolean {
+  public didCollide(actor: IActor): boolean {
     const head = this.getPosition();
-    // If checking against itself ignore the head (index 0), only check tail
-    const partsToCheck = this === s ? s.getParts().slice(1) : s.getParts();
-    // Check if head matches any part
-    return partsToCheck.some(p => head.equals(p));
+    // collision with non-snake
+    if(actor.type !== "snake") {
+      return head.equals(actor.position);
+    } 
+    else if (this !== actor) {
+      const s = actor as Snake;
+      return s.getParts().some(p => head.equals(p));
+    } else {
+      return this.getParts().slice(1).some(p => head.equals(p));
+    }
+  }
+  public die(): void {
+    this.isCurrentlyActive = false;
+  }
+  public grow(): void {
+    const tail = this.currentParts[this.currentParts.length - 1];
+    let newPart: Point;
+    switch (this.direction) {
+      case "RIGHT":
+        newPart = new Point(tail.x - 1, tail.y);
+        break;
+      case "LEFT":
+        newPart = new Point(tail.x + 1, tail.y);
+        break;
+      case "DOWN":
+        newPart = new Point(tail.x, tail.y - 1);
+        break;
+      case "UP":
+        newPart = new Point(tail.x, tail.y + 1);
+        break;
+      default:
+        newPart = tail;
+    }
+    this.currentParts.push(newPart);
   }
   //Turn the snake left
    turnLeft(): void {

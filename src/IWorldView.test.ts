@@ -2,6 +2,7 @@ import CanvasWorldView from "./CanvasWorldView";
 import WorldModel from "./WorldModel";
 import Snake from "./Snake";
 import Point from "./Point";
+import ActorCollisionHandlers from "./ActorCollisionHandlers";
 
 describe("CanvasWorldView", () => {
   it("implements display without crashing", () => {
@@ -13,10 +14,11 @@ describe("CanvasWorldView", () => {
     const view = new CanvasWorldView(context);
 
     const snake = new Snake(new Point(0, 0), 3, "RIGHT");
-    const world = new WorldModel();
+    const aca = new ActorCollisionHandlers();
+    const world = new WorldModel(aca);
 
     // Add snake to world
-    world.addSnake(snake);
+    world.addActor(snake);
 
     // Add view (optional but good practice)
     world.addView(view);

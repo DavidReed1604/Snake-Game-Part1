@@ -9,6 +9,7 @@ import Quacker from './Quacker';
 import CanvasWorldView from './CanvasWorldView';
 import WorldModel from "./WorldModel";
 import Point from "./Point";
+import ActorCollisionHandlers from "./ActorCollisionHandlers";
 
 export default function App() {
   const [output, setOutput] = useState("");
@@ -19,8 +20,9 @@ export default function App() {
     const snake = new Snake(new Point(0, 0), 5, "RIGHT");
 
     // Create world and add the snake
-    const world = new WorldModel();
-    world.addSnake(snake);
+    const aca = new ActorCollisionHandlers();
+    const world = new WorldModel(aca);
+    world.addActor(snake);
 
     // Create a canvas + context for CanvasWorldView
     const canvas = document.createElement("canvas");

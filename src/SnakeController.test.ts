@@ -2,6 +2,7 @@ import SnakeController from "./SnakeController";
 import Snake from "./Snake";
 import WorldModel from "./WorldModel";
 import Point from './Point';
+import ActorCollisionHandlers from "./ActorCollisionHandlers";
 
 describe("SnakeController tests", () => {
 
@@ -14,10 +15,11 @@ describe("SnakeController tests", () => {
     snake = new Snake(new Point(0, 0), 3, "RIGHT");
 
     // World now has no constructor parameters
-    world = new WorldModel();
+    const aca = new ActorCollisionHandlers();
+    world = new WorldModel(aca);
 
     // Add snake to world
-    world.addSnake(snake);
+    world.addActor(snake);
 
     controller = new SnakeController(world, snake);
   });
